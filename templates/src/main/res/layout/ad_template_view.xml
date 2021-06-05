@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="0dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/adContainer"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/adglobi_outline_shape">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="fitXY"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"
+            android:id="@+id/ad_main_image"
+            ></ImageView>
+        <TextView
+            android:background="@drawable/adglobi_rounded_corners_shape"
+            android:layout_width="@dimen/adglobi_ad_indicator_width"
+            android:gravity="center"
+            android:id="@+id/ad_notification_view"
+            android:layout_height="@dimen/adglobi_ad_indicator_height"
+            android:layout_margin="5dp"
+            android:text="Ad"
+            android:textColor="@color/adglobi_ad_green"
+            android:textStyle="bold"
+            android:textSize="@dimen/adglobi_ad_indicator_text_size"></TextView>
+        <ImageButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:background="@color/adglobi_outline"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/ad_close"
+            android:src="@drawable/close"></ImageButton>
+        <ImageButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/ad_close"
+            android:layout_marginRight="34dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/ad_privacy"
+            android:background="@color/adglobi_outline"
+            android:scaleType="centerCrop"
+           android:src="@drawable/privacy"></ImageButton>
+
+
+    </RelativeLayout>
+</RelativeLayout>
