@@ -8,13 +8,14 @@
     tools:context=".MainActivity">
 
     <!--
-<com.adglobi.nativetemplates.AdTemplateView
+<com.adglobi.templates.AdTemplateView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/abc"
+    android:id="@+id/pakistan"
     android:layout_alignParentBottom="true"
     app:adglobi_template_type="@layout/ad_template_view">
-</com.adglobi.nativetemplates.AdTemplateView>
+
+</com.adglobi.templates.AdTemplateView>
 -->
 
 </RelativeLayout>

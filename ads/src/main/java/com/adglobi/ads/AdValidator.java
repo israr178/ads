@@ -49,6 +49,9 @@ public class AdValidator implements GetNetworkResult, LocationListener{
         if(gpsCountryCode == null){
             gpsCountryCode = Utilities.getDataSharedPreference(AdGlobi.getApplicationContext(),"gpsCountryCode");
         }
+        if(gpsCountryCode.isEmpty()){
+            gpsCountryCode = "-1";
+        }
         return gpsCountryCode;
     }
 
@@ -130,8 +133,8 @@ public class AdValidator implements GetNetworkResult, LocationListener{
         }
         Log.d("israr"," ad :"+ ad.getCountry_allow() + " "+ getApiCountryCode());
         if(ad.getCountry_allow().isEmpty() ||
-                ad.getCountry_allow().equalsIgnoreCase(getGpsCountryCode()) ||
-                ad.getCountry_allow().equalsIgnoreCase(getApiCountryCode())){
+                ad.getCountry_allow().contains(getGpsCountryCode()) ||
+                ad.getCountry_allow().contains(getApiCountryCode())){
             // ad is allowed in this country
             if(!ad.getCountry_block().isEmpty() &&
                     (ad.getCountry_block().equalsIgnoreCase(getGpsCountryCode()) ||
@@ -254,23 +257,34 @@ public class AdValidator implements GetNetworkResult, LocationListener{
             Log.d("israr",result);
             try {
                 JSONObject apiResponse = new JSONObject(result);
-                String status = apiResponse.getString("status");
-                if(status != null && !status.isEmpty() && status.equals("success")){
-                    apiCountryCode = apiResponse.getString("countryCode");
-                    apiCity = apiResponse.getString("city");
-                    apiISP = apiResponse.getString("isp");
-                    apiRegionName = apiResponse.getString("regionName");
-                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCountryCode",apiCountryCode);
-                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCity",apiCity);
-                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiISP",apiISP);
-                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiRegionName",apiRegionName);
-                }else{
-                    //api failed, get location via gps
-                    AdGlobi.getLocationViaGps();
-                }
+                apiCountryCode = apiResponse.getString("country_code");
+                apiCity = apiResponse.getString("city");
+                apiRegionName = apiResponse.getString("state");
+                Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCountryCode",apiCountryCode);
+                Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCity",apiCity);
+                Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiISP","");
+                Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiRegionName",apiRegionName);
+
+//                String status = apiResponse.getString("status");
+//                if(status != null && !status.isEmpty() && status.equals("success")){
+//                    apiCountryCode = apiResponse.getString("countryCode");
+//                    apiCity = apiResponse.getString("city");
+//                    apiISP = apiResponse.getString("isp");
+//                    apiRegionName = apiResponse.getString("regionName");
+//                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCountryCode",apiCountryCode);
+//                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiCity",apiCity);
+//                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiISP",apiISP);
+//                    Utilities.saveDataSharedPreference(AdGlobi.getApplicationContext(),"apiRegionName",apiRegionName);
+//                }else{
+//                    //api failed, get location via gps
+//                    AdGlobi.getLocationViaGps();
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }else{
+            //api failed, get location via gps
+            AdGlobi.getLocationViaGps();
         }
     }
     public static boolean checkLocationPermission(Activity context) {

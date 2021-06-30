@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+
     android:layout_marginBottom="0dp">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,8 +49,7 @@
             android:id="@+id/ad_privacy"
             android:background="@color/adglobi_outline"
             android:scaleType="centerCrop"
-           android:src="@drawable/privacy"></ImageButton>
-
+            android:src="@drawable/privacy"></ImageButton>
 
     </RelativeLayout>
 </RelativeLayout>

@@ -53,13 +53,14 @@ public class MainActivity extends AppCompatActivity implements AdLoadingListener
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if(requestCode == 99){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 99) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("israr","permission granted");
+                Log.d("israr", "permission granted");
                 adGlobi.getLocationViaGps();
-            }else{
-                Log.d("israr","permission denied");
+            } else {
+                Log.d("israr", "permission denied");
             }
         }
     }

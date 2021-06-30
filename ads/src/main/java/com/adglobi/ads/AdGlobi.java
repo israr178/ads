@@ -27,7 +27,7 @@ public class AdGlobi implements GetNetworkResult,GetImageResult{
     public void initialize(Activity containingActivity, Credentials credentials){
         //we will store weak reference to activity , to avoid memory leak
         mContext = new WeakReference<Activity>(containingActivity);
-
+        ads = new ArrayList<>();
         //credentials are necessary to get ads
         mCredentials = credentials;
 
@@ -47,8 +47,14 @@ public class AdGlobi implements GetNetworkResult,GetImageResult{
         Log.d("israr","isp: "+adValidator.getSimNetworkISP() +" "+adValidator.getApiISP() +" "+ adValidator.getGpsCity());
 
         //start a timer to load next ad after 1 minute
-        mTimer = new Timer();
-        mTimer.scheduleAtFixedRate(new AdScheduler(),INTERVAL,INTERVAL);// schedule task
+        if(mTimer == null) {
+            mTimer = new Timer();
+            mTimer.scheduleAtFixedRate(new AdScheduler(), INTERVAL, INTERVAL);// schedule task
+        }else{
+            mTimer.cancel();
+            mTimer = new Timer();
+            mTimer.scheduleAtFixedRate(new AdScheduler(), INTERVAL, INTERVAL);// schedule task
+        }
     }
     public static Context getApplicationContext(){
         return applicationContext;
@@ -77,19 +83,16 @@ public class AdGlobi implements GetNetworkResult,GetImageResult{
 
     @Override
     public void onRequestCompleted(String result) {
-        Log.d("israr",result);
-
-        ads = new ArrayList<>();
         Utilities.parseJson(result,ads);
+        Log.d("israr",result);
         Log.d("israr","size: "+ads.size());
         if(adValidator.getApiCountryCode().isEmpty()){
             try {
-                Thread.sleep(300);
+                Thread.sleep(350);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
         if(ads.size() > 0){
             Iterator<AdModel> iter = ads.iterator();
             while(iter.hasNext()) {
@@ -107,6 +110,7 @@ public class AdGlobi implements GetNetworkResult,GetImageResult{
             imageLoader = new ImageLoader(this);
             imageLoader.getBitmap(ads.get(currentAdIndex).getCreatives().get("300x250"));
         }else{
+            Log.d("israr","timer cancelled");
             mTimer.cancel();
             mContext.get().runOnUiThread(new Runnable() {
                 @Override
@@ -119,37 +123,52 @@ public class AdGlobi implements GetNetworkResult,GetImageResult{
     @Override
     public void onImageLoaded(Bitmap bitmap) {
         Log.d("israr","next1 ad called"+ currentAdIndex + ads.size());
+        if(ads.size()>0){
+        }else{
+            Log.d("israr","timer cancelled");
+            mTimer.cancel();
+        }
+
+        UnifiedAd adGlobiUnfiedAd = new UnifiedAd(ads.get(currentAdIndex),bitmap);
+        synchronized(currentAdIndex) {
+            currentAdIndex = currentAdIndex+1;
+            if(currentAdIndex == ads.size()){
+                currentAdIndex = 0;
+            }
+        }
+
         mContext.get().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                UnifiedAd adGlobiUnfiedAd = new UnifiedAd(ads.get(currentAdIndex),bitmap);
-                synchronized(currentAdIndex) {
-                    currentAdIndex++;
-                    if(currentAdIndex == ads.size()){
-                        synchronized(currentAdIndex) {
-                            currentAdIndex = 0;
-                        }
-                    }
-                }
                 if(mContext !=null) {
                     mAdLoadingListener.onAdLoaded(adGlobiUnfiedAd);
                 }else{
+                    Log.d("israr","timer cancelled");
                     mTimer.cancel();
                 }
             }
         });
     }
     public void loadNextScheduledAd(){
+        if(ads ==null){
+            return;
+        }
+        if(mContext.get() == null || mContext.get().isDestroyed() || mContext.get().isFinishing()){
+            Log.d("israr","scheduler cancelled");
+            mTimer.cancel();
+            return;
+        }
+
         Log.d("israr","next ad called"+ currentAdIndex + ads.size());
 //        if(currentAdIndex == ads.size()){
 //            synchronized(currentAdIndex) {
 //                currentAdIndex = 0;
 //            }
 //        }
-        if(currentAdIndex < ads.size()) {
+        if(currentAdIndex < ads.size() ) {
             imageLoader.getBitmap(ads.get(currentAdIndex).getCreatives().get("300x250"));
         }else{
-           //mTimer.cancel();
+            //mTimer.cancel();
             if(mContext.get() == null || mContext.get().isDestroyed() || mContext.get().isFinishing()){
                 Log.d("israr","scheduler cancelled");
                 mTimer.cancel();
