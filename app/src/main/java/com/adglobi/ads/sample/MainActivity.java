@@ -18,6 +18,7 @@ import com.adglobi.templates.AdTemplateView;
 
 public class MainActivity extends AppCompatActivity implements AdLoadingListener, AdInteractionListener {
 
+    // type should be top root ViewGroup of your activity layout
     RelativeLayout rl;
     AdTemplateView nativeTemplateView;
     AdGlobi adGlobi;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements AdLoadingListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //AdTemplateView adView = (AdTemplateView)this.getLayoutInflater().inflate(R.layout.ad_template_view,null);
 
         rl = findViewById(R.id.main);
         nativeTemplateView = new AdTemplateView(this,null);

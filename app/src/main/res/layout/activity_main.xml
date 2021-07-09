@@ -7,15 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!--
 <com.adglobi.templates.AdTemplateView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/pakistan"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:id="@+id/adView"
     android:layout_alignParentBottom="true"
     app:adglobi_template_type="@layout/ad_template_view">
-
 </com.adglobi.templates.AdTemplateView>
--->
 
 </RelativeLayout>
